@@ -1,0 +1,565 @@
+<title>Rabiya Mentor</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --surface:#F7F5F0; --surface-2:#FFFFFF; --surface-3:#152A22;
+    --text:#152A22; --text-on-3:#F7F5F0; --text-on-3-muted:#93A69A;
+    --text-muted:#5B6B60; --muted:#8A968C; --border:#E6E1D3; --border-on-3:#2C4137;
+    --accent:#C1572C; --accent-contrast:#FFFFFF; --accent-soft:#FBEADF;
+    --sage:#4E7A55; --sage-soft:#E2EBDF; --danger:#B44A26; --danger-soft:#F3E2DC;
+    --page-bg:#E9E4D5;
+    --shadow:0 24px 60px -24px rgba(21,42,34,.35);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --surface:#111A15; --surface-2:#1B2620; --surface-3:#1F3328;
+      --text:#EBEDE7; --text-on-3:#EBEDE7; --text-on-3-muted:#9FB2A5;
+      --text-muted:#9AAAA0; --muted:#77897E; --border:#293A31; --border-on-3:#33473C;
+      --accent:#E0895A; --accent-contrast:#1B120C; --accent-soft:#3A2B21;
+      --sage:#8AC095; --sage-soft:#20342A; --danger:#E08A6A; --danger-soft:#3B2A22;
+      --page-bg:#080C0A;
+      --shadow:0 24px 60px -24px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="dark"]{
+    --surface:#111A15; --surface-2:#1B2620; --surface-3:#1F3328;
+    --text:#EBEDE7; --text-on-3:#EBEDE7; --text-on-3-muted:#9FB2A5;
+    --text-muted:#9AAAA0; --muted:#77897E; --border:#293A31; --border-on-3:#33473C;
+    --accent:#E0895A; --accent-contrast:#1B120C; --accent-soft:#3A2B21;
+    --sage:#8AC095; --sage-soft:#20342A; --danger:#E08A6A; --danger-soft:#3B2A22;
+    --page-bg:#080C0A;
+    --shadow:0 24px 60px -24px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--page-bg);color:var(--text);font-family:'Manrope',ui-sans-serif,system-ui,sans-serif;}
+  h1,h2,h3{font-family:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;margin:0;text-wrap:balance;}
+  button{font-family:inherit;cursor:pointer;}
+  a{color:inherit;text-decoration:none;}
+  input{font-family:inherit;}
+  ::selection{background:var(--accent-soft);}
+
+  .stage{min-height:100dvh;display:flex;justify-content:center;padding-block:28px;}
+  .shell{width:100%;max-width:448px;min-height:calc(100dvh - 56px);background:var(--surface);border-radius:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border);}
+  @media (max-width:520px){ .stage{padding-block:0;} .shell{max-width:100%;min-height:100dvh;border-radius:0;border:none;} }
+
+  .scroll{flex:1;overflow-y:auto;padding:26px 22px 24px;display:flex;flex-direction:column;gap:20px;}
+  .topline{display:flex;align-items:center;justify-content:space-between;}
+  .brand{font-size:11.5px;font-weight:800;letter-spacing:.09em;color:var(--muted);}
+  .linkback{font-size:12.5px;font-weight:700;color:var(--text);background:none;border:none;padding:0;display:flex;align-items:center;gap:4px;}
+  .iconbtn{width:36px;height:36px;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;}
+
+  .card{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:18px;}
+  .card-dark{background:var(--surface-3);border-radius:16px;padding:20px;color:var(--text-on-3);}
+  .kicker{font-size:10.5px;font-weight:800;letter-spacing:.09em;color:var(--accent);}
+  .kicker-muted{font-size:10.5px;font-weight:800;letter-spacing:.09em;color:var(--muted);}
+  .kicker-on3{font-size:10.5px;font-weight:800;letter-spacing:.09em;color:var(--text-on-3-muted);}
+
+  .btn-primary{background:var(--accent);color:var(--accent-contrast);border:none;border-radius:12px;padding:15px 18px;font-size:14.5px;font-weight:700;text-align:center;display:block;width:100%;}
+  .btn-outline{background:transparent;border:1.4px solid var(--text);color:var(--text);border-radius:12px;padding:15px 18px;font-size:14.5px;font-weight:700;text-align:center;display:block;width:100%;}
+  .btn-primary:focus-visible,.btn-outline:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+  .checkbox{width:23px;height:23px;border-radius:7px;border:1.6px solid var(--border);flex:0 0 23px;display:flex;align-items:center;justify-content:center;background:var(--surface-2);}
+  .checkbox.on{background:var(--accent);border-color:var(--accent);}
+  .task-row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:none;padding:10px 0;}
+
+  .navbar{position:sticky;bottom:0;background:var(--surface-2);border-top:1px solid var(--border);display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));}
+  .navitem{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;background:none;border:none;padding:6px 2px;min-height:44px;color:var(--muted);}
+  .navitem.on{color:var(--accent);}
+  .navitem span{font-size:10px;font-weight:700;}
+
+  .pill{border-radius:20px;padding:9px 14px;font-size:12px;font-weight:700;border:1px solid var(--border);background:var(--surface-2);color:var(--text-muted);white-space:nowrap;}
+  .pill.on{background:var(--surface-3);color:var(--text-on-3);border-color:var(--surface-3);}
+  .seg{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:4px;gap:4px;}
+  .seg button{flex:1;border:none;background:none;border-radius:9px;padding:10px 4px;font-size:12.5px;font-weight:700;color:var(--text-muted);}
+  .seg button.on{background:var(--surface-3);color:var(--text-on-3);}
+
+  .row-between{display:flex;align-items:center;justify-content:space-between;}
+  .funnel{display:flex;align-items:center;gap:4px;}
+  .funnel .step{flex:1;min-width:0;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:12px 6px;text-align:center;}
+  .funnel .arrow{color:var(--accent);font-weight:700;flex:0 0 14px;text-align:center;}
+
+  .tag{font-size:10.5px;font-weight:700;padding:5px 10px;border-radius:12px;white-space:nowrap;}
+  .barbg{height:5px;border-radius:4px;background:var(--border);overflow:hidden;}
+  .barbg .fg{height:100%;border-radius:4px;}
+
+  .bubble-me{align-self:flex-end;background:var(--surface-3);color:var(--text-on-3);border-radius:14px 14px 4px 14px;padding:12px 15px;max-width:80%;font-size:13.5px;line-height:1.45;}
+  .bubble-ai{align-self:flex-start;background:var(--surface-2);border:1px solid var(--border);color:var(--text);border-radius:14px 14px 14px 4px;padding:12px 15px;max-width:86%;font-size:13.5px;line-height:1.45;}
+  .chat-log{display:flex;flex-direction:column;gap:10px;}
+
+  .field-text{font-variant-numeric:tabular-nums;}
+</style>
+
+<div class="stage">
+  <div class="shell">
+    <div id="app" class="scroll" role="main"></div>
+    <nav id="navbar"></nav>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var state = {
+    page: 'home',
+    home: { checks: { lead:false, followup:false, reels:false, consult:false } },
+    tests: { step: 0, answers: { niche:'', goal:'', income:'' } },
+    strategy: { plan: 'medium' },
+    tasks: { checks: { t1:false, t2:false, t3:false, t4:false }, expanded: 't1' },
+    chat: {
+      draft: '',
+      sentToRabiya: false,
+      log: [
+        { who:'me', text:'Клиент қымбат деді. Не жазамын?' },
+        { who:'ai', text:'Бағаңды түсірме. Офферіңнің құндылығын нақтыла: нәтиже, мерзім, кепілдік. Бизнес-профиліңе сай дайын жауап: «Түсінемін. Дәл сол себепті...»' },
+      ],
+    },
+    templates: { cat: 'wa' },
+    admin: { filter: 'all', expanded: null },
+  };
+
+  function esc(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  }
+  function money(n){ return n.toLocaleString('ru-RU') + ' ₸'; }
+
+  // ---------- icons ----------
+  var ICON = {
+    home:'<path d="M4 11.5L12 4l8 7.5"/><path d="M6 10v9a1 1 0 0 0 1 1h4v-6h2v6h4a1 1 0 0 0 1-1v-9"/>',
+    tests:'<rect x="6" y="4" width="12" height="17" rx="1.5"/><rect x="9" y="2.3" width="6" height="3" rx="1"/><path d="M9 11h6M9 14h6M9 17h4"/>',
+    strategy:'<circle cx="12" cy="12" r="7.3"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>',
+    tasks:'<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 12.3l2.4 2.4L16 9.3"/>',
+    chat:'<path d="M4 12a8 8 0 1 1 3.2 6.4L4 20l1.1-3.6A7.96 7.96 0 0 1 4 12Z"/>',
+    admin:'<circle cx="12" cy="8" r="3.2"/><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6"/>',
+    send:'<path d="M4 12l16-8-6 16-3-6-7-2z"/>',
+    chevron:'<path d="M7 10l5 5 5-5"/>',
+    room1:'<path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/>',
+    room2:'<path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a1 1 0 0 0-1 1c0 2.5 1.8 4 4 4.3M17 6h3a1 1 0 0 1 1 1c0 2.5-1.8 4-4 4.3"/>',
+    room3:'<path d="M4 19V9M10 19V5M16 19v-7M4 19h16"/>',
+    room4:'<circle cx="12" cy="11.5" r="7.5"/><path d="M9 10h.01M12 10h.01M15 10h.01" stroke-width="2.4"/>',
+    room5:'<path d="M18 8a6 6 0 1 0-12 0c0 5-2 6-2 6h16s-2-1-2-6"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
+  };
+  function icon(name, size, extra){
+    return '<svg viewBox="0 0 24 24" width="'+(size||20)+'" height="'+(size||20)+'" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '+(extra||'')+'>'+ICON[name]+'</svg>';
+  }
+
+  // ---------- shared bits ----------
+  function topline(back){
+    return '<div class="topline">'
+      + '<span class="brand">RABIYA MENTOR</span>'
+      + (back ? '<button class="linkback" data-act="nav" data-val="'+back.to+'">'+back.label+'</button>' : '')
+      + '</div>';
+  }
+  function navBar(active){
+    var items = [
+      ['home','home','Басты бет'],
+      ['tests','tests','Тестілер'],
+      ['strategy','strategy','Стратегия'],
+      ['tasks','tasks','Тапсырма'],
+      ['chat','chat','AI Mentor'],
+    ];
+    return '<div class="navbar">' + items.map(function(it){
+      var on = it[0] === active;
+      return '<button class="navitem'+(on?' on':'')+'" data-act="nav" data-val="'+it[0]+'" aria-current="'+(on?'page':'false')+'">'
+        + icon(it[1], 21) + '<span>'+it[2]+'</span></button>';
+    }).join('') + '</div>';
+  }
+  function checkbox(on){
+    return '<span class="checkbox'+(on?' on':'')+'">'
+      + (on ? '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="var(--accent-contrast)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>' : '')
+      + '</span>';
+  }
+
+  // ---------- page: HOME ----------
+  function pageHome(){
+    var h = state.home;
+    var defs = [
+      ['lead','5 жаңа лид тарту'],
+      ['followup','2 follow-up жасау'],
+      ['reels','1 сататын Reels шығару'],
+      ['consult','1 консультация өткізу'],
+    ];
+    var done = defs.filter(function(d){ return h.checks[d[0]]; }).length;
+    var goal = 1000000, current = 650000;
+    var pct = Math.round(current/goal*100);
+    var rows = defs.map(function(d){
+      var on = h.checks[d[0]];
+      return '<button type="button" class="task-row" data-act="toggleHome" data-val="'+d[0]+'" aria-pressed="'+on+'">'
+        + checkbox(on)
+        + '<span style="font-size:14px;'+(on?'color:var(--muted);text-decoration:line-through;':'')+'">'+d[1]+'</span></button>';
+    }).join('');
+
+    return topline()
+      + '<div><h1 style="font-size:24px;font-weight:600;">Қайырлы таң, Аружан</h1>'
+      + '<p style="margin:6px 0 0;font-size:13px;color:var(--text-muted);">Бүгін — '+done+' / '+defs.length+' тапсырма дайын.</p></div>'
+      + '<div class="card-dark">'
+        + '<div class="kicker-on3">ОСЫ АЙДЫҢ МАҚСАТЫ</div>'
+        + '<div style="font-size:26px;font-weight:700;margin-top:6px;font-family:\'Bricolage Grotesque\',sans-serif;" class="field-text">'+money(goal)+'</div>'
+        + '<div class="row-between" style="margin-top:14px;font-size:12.5px;">'
+          + '<span style="color:var(--text-on-3-muted);">Қазіргі: <b style="color:var(--text-on-3);" class="field-text">'+money(current)+'</b></span>'
+          + '<span style="color:var(--accent);font-weight:700;" class="field-text">'+pct+'%</span>'
+        + '</div>'
+        + '<div class="barbg" style="background:var(--border-on-3);margin-top:8px;"><div class="fg" style="width:'+pct+'%;background:var(--accent);"></div></div>'
+        + '<div style="font-size:11.5px;color:var(--text-on-3-muted);margin-top:8px;" class="field-text">Мақсатқа дейін: '+money(goal-current)+'</div>'
+      + '</div>'
+      + '<div class="card">'
+        + '<div class="row-between" style="margin-bottom:4px;"><span class="kicker">БҮГІНГІ ФОКУС</span><span style="font-size:12px;color:var(--muted);font-weight:700;">'+done+' / '+defs.length+'</span></div>'
+        + rows
+        + (done === defs.length ? '<div style="margin-top:10px;padding:11px 14px;background:var(--sage-soft);border-radius:10px;font-size:12.5px;color:var(--sage);font-weight:700;">Бәрі дайын. Ертеңге жаңа фокус AI-дан келеді.</div>' : '')
+      + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:10px;">'
+        + '<button class="btn-primary" data-act="nav" data-val="tasks">Тапсырмаларды ашу</button>'
+        + '<button class="btn-outline" data-act="nav" data-val="chat">AI Mentor-дан сұра</button>'
+      + '</div>'
+      + '<div style="display:flex;gap:10px;">'
+        + '<button data-act="nav" data-val="community" style="flex:1;text-align:left;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:14px;">'
+          + '<div style="font-size:13px;font-weight:700;">Community</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Чат, жеңістер, Q&amp;A</div></button>'
+        + '<button data-act="nav" data-val="analytics" style="flex:1;text-align:left;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:14px;">'
+          + '<div style="font-size:13px;font-weight:700;">Аналитика</div><div style="font-size:11px;color:var(--muted);margin-top:3px;">Воронка, апта нәтижесі</div></button>'
+      + '</div>'
+      + '<button class="iconbtn" data-act="nav" data-val="admin" aria-label="Admin режимі" style="align-self:flex-end;">'+icon('admin',17)+'</button>';
+  }
+
+  // ---------- page: TESTS ----------
+  var QUESTIONS = [
+    { block:'2-БЛОК · НИША', text:'Сіздің бизнес саласы қайсы?', field:'niche', options:['Сұлулық қызметтері','Білім / коучинг','Денсаулық','Басқа'] },
+    { block:'8-БЛОК · МАҚСАТ', text:'Осы айдағы басты мақсатыңыз қандай?', field:'goal', options:['Табысты арттыру','Клиент санын көбейту','Брендті тану ету'] },
+    { block:'4-БЛОК · АҚША', text:'Қазіргі айлық табысыңыз қандай диапазонда?', field:'income', options:['300 000 ₸ дейін','300 000 – 1 000 000 ₸','1 000 000 ₸ +'] },
+  ];
+  var BLOCKS = ['Өзі және бизнесі','Ниша','Өнім','Ақша','Клиент және продажа','Контент','Команда және ресурс','Мақсат және кедергілер'];
+
+  function pageTests(){
+    var t = state.tests;
+    if (t.step === 0) {
+      return topline()
+        + '<div><h1 style="font-size:23px;font-weight:600;">Диагностика</h1>'
+        + '<p style="margin:8px 0 0;font-size:13px;color:var(--text-muted);line-height:1.5;">Толық нұсқада — 8 блок, 50–100 сұрақ. Мұнда 3 үлгі сұрақпен қысқаша көрсетеміз.</p></div>'
+        + '<div class="card">' + BLOCKS.map(function(b,i){
+            return '<div style="display:flex;align-items:center;gap:12px;padding:8px 0;font-size:13.5px;">'
+              + '<span style="width:22px;height:22px;border-radius:50%;background:var(--surface-3);color:var(--text-on-3);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex:0 0 22px;">'+(i+1)+'</span>'
+              + '<span>'+b+'</span></div>';
+          }).join('') + '</div>'
+        + '<button class="btn-primary" data-act="quizStart">Бастау</button>'
+        + navBarPlaceholder('tests');
+    }
+    if (t.step >= 1 && t.step <= 3) {
+      var q = QUESTIONS[t.step - 1];
+      var dots = [0,1,2].map(function(i){
+        var c = i < (t.step-1) ? 'var(--accent)' : (i === (t.step-1) ? 'var(--text)' : 'var(--border)');
+        return '<span style="width:7px;height:7px;border-radius:50%;background:'+c+';display:inline-block;"></span>';
+      }).join('');
+      return topline()
+        + '<div style="display:flex;gap:6px;align-items:center;">'+dots+'<span style="font-size:11.5px;color:var(--muted);margin-left:6px;">'+t.step+' / 3</span></div>'
+        + '<div><div class="kicker">'+q.block+'</div><h2 style="font-size:19px;font-weight:600;margin-top:8px;line-height:1.35;">'+q.text+'</h2></div>'
+        + '<div style="display:flex;flex-direction:column;gap:10px;">' + q.options.map(function(opt){
+            return '<button type="button" class="pill" style="text-align:left;padding:15px 16px;border-radius:13px;font-size:14px;" data-act="quizPick" data-field="'+q.field+'" data-label="'+esc(opt)+'">'+opt+'</button>';
+          }).join('') + '</div>'
+        + navBarPlaceholder('tests');
+    }
+    // result
+    var a = t.answers;
+    return topline()
+      + '<div class="kicker">НӘТИЖЕ</div>'
+      + '<h1 style="font-size:22px;font-weight:600;">Бизнес паспорт</h1>'
+      + '<div class="card-dark" style="display:flex;flex-direction:column;gap:14px;">'
+        + row3('НИША', a.niche || '—')
+        + row3('БАСТЫ МАҚСАТ', a.goal || '—')
+        + row3('ҚАЗІРГІ ТАБЫС', a.income || '—')
+      + '</div>'
+      + '<p style="font-size:12.5px;color:var(--text-muted);line-height:1.5;">Толық нұсқада бұл паспорт 10 өрістен тұрады (аудитория, өнім, баға, оффер, 3-айлық мақсат...) және AI-дың әр жауабында қолданылады.</p>'
+      + '<button class="btn-primary" data-act="nav" data-val="strategy">Стратегияны көру</button>'
+      + navBarPlaceholder('tests');
+  }
+  function row3(label, value){
+    return '<div><div class="kicker-on3">'+label+'</div><div style="font-size:15px;font-weight:600;margin-top:3px;">'+value+'</div></div>';
+  }
+
+  // ---------- page: STRATEGY ----------
+  var PLANS = {
+    light:      { label:'Жеңіл', goal:'3 айда 1 500 000 ₸', product:'100 000 ₸', clients:'15', consult:'30', leads:'90', daily:'3–4 әрекет/күн' },
+    medium:     { label:'Орташа', goal:'3 айда 3 000 000 ₸', product:'150 000 ₸', clients:'20', consult:'40', leads:'120', daily:'5 әрекет/күн' },
+    aggressive: { label:'Агрессивті', goal:'3 айда 6 000 000 ₸', product:'200 000 ₸', clients:'30', consult:'60', leads:'180', daily:'7–8 әрекет/күн' },
+  };
+  function pageStrategy(){
+    var plan = state.strategy.plan;
+    var d = PLANS[plan];
+    return topline()
+      + '<div><h1 style="font-size:22px;font-weight:600;">90 күндік стратегия</h1><p style="margin:8px 0 0;font-size:13px;color:var(--text-muted);">Мақсатты таңда — платформа кері есептейді.</p></div>'
+      + '<div class="seg">' + Object.keys(PLANS).map(function(k){
+          return '<button type="button" class="'+(k===plan?'on':'')+'" data-act="setPlan" data-val="'+k+'">'+PLANS[k].label+'</button>';
+        }).join('') + '</div>'
+      + '<div class="card-dark">'
+        + '<div class="kicker-on3">МАҚСАТ</div>'
+        + '<div style="font-size:22px;font-weight:700;margin-top:5px;font-family:\'Bricolage Grotesque\',sans-serif;">'+d.goal+'</div>'
+        + '<div style="font-size:12.5px;color:var(--text-on-3-muted);margin-top:10px;">Өнім бағасы: <b style="color:var(--text-on-3);">'+d.product+'</b></div>'
+      + '</div>'
+      + '<div><div class="kicker" style="margin-bottom:10px;display:block;">КЕРІ ЕСЕПТЕУ</div>'
+        + '<div class="funnel">'
+          + '<div class="step"><div style="font-size:15px;font-weight:700;">'+d.clients+'</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px;">клиент</div></div>'
+          + '<span class="arrow">→</span>'
+          + '<div class="step"><div style="font-size:15px;font-weight:700;">'+d.consult+'</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px;">консульт.</div></div>'
+          + '<span class="arrow">→</span>'
+          + '<div class="step"><div style="font-size:15px;font-weight:700;">'+d.leads+'</div><div style="font-size:10px;color:var(--text-muted);margin-top:2px;">лид</div></div>'
+        + '</div>'
+        + '<div class="card" style="text-align:center;margin-top:10px;padding:12px;font-size:12.5px;">Күнделікті: <b>'+d.daily+'</b></div>'
+      + '</div>'
+      + '<div><div class="kicker-muted" style="margin-bottom:10px;display:block;">90 КҮНДІК ЖОСПАР</div>'
+        + '<div style="display:flex;gap:8px;">'
+          + monthCard('1-АЙ','FUNDAMENT') + monthCard('2-АЙ','SALES') + monthCard('3-АЙ','SCALE')
+        + '</div></div>'
+      + '<button class="btn-outline" data-act="nav" data-val="analytics">Толық аналитиканы көру</button>'
+      + navBarPlaceholder('strategy');
+  }
+  function monthCard(n,t){
+    return '<div class="card" style="flex:1;text-align:center;padding:14px 8px;"><div style="font-size:10px;color:var(--muted);font-weight:700;">'+n+'</div><div style="font-size:14px;font-weight:700;margin-top:4px;">'+t+'</div></div>';
+  }
+
+  // ---------- page: TASKS ----------
+  var TASK_DEFS = [
+    { key:'t1', label:'5 жаңа лидке хабарласу', why:'Воронканы толтыру үшін', how:'Instagram DM + WhatsApp арқылы', time:'40 минут' },
+    { key:'t2', label:'2 follow-up жіберу', why:'Суыған клиентті қайтару үшін', how:'Дайын шаблон бойынша', time:'15 минут' },
+    { key:'t3', label:'1 сататын Reels шығару', why:'Жаңа лид ағынын ашу үшін', how:'Дайын сценарий бойынша түсіру', time:'30 минут' },
+    { key:'t4', label:'1 консультация өткізу', why:'Табысты жабу үшін', how:'Сату скрипті бойынша', time:'45 минут' },
+  ];
+  function pageTasks(){
+    var st = state.tasks;
+    var done = TASK_DEFS.filter(function(d){ return st.checks[d.key]; }).length;
+    var cards = TASK_DEFS.map(function(d){
+      var on = st.checks[d.key];
+      var exp = st.expanded === d.key;
+      var body = '<div class="row-between" style="gap:10px;">'
+        + '<button type="button" class="task-row" style="flex:1;min-width:0;" data-act="toggleTask" data-val="'+d.key+'" aria-pressed="'+on+'">'
+          + checkbox(on) + '<span style="font-size:14.5px;font-weight:600;'+(on?'color:var(--muted);text-decoration:line-through;':(exp?'color:var(--text-on-3);':''))+'">'+d.label+'</span></button>'
+        + '<button type="button" class="iconbtn" style="flex:0 0 30px;width:30px;height:30px;'+(exp?'background:transparent;border-color:var(--border-on-3);color:var(--text-on-3);':'')+'" data-act="expandTask" data-val="'+d.key+'" aria-label="Толығырақ">'
+          + '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform:rotate('+(exp?180:0)+'deg)"><path d="M7 10l5 5 5-5"/></svg></button>'
+        + '</div>';
+      if (exp) body += '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-on-3);display:flex;flex-direction:column;gap:6px;font-size:12px;">'
+        + stepRow('НЕ ҮШІН?', d.why) + stepRow('ҚАЛАЙ?', d.how) + stepRow('ҚАНША УАҚЫТ?', d.time) + '</div>';
+      return '<div class="'+(exp?'card-dark':'card')+'">' + body + '</div>';
+    }).join('');
+
+    return topline()
+      + '<div><h1 style="font-size:22px;font-weight:600;">Бүгінгі тапсырма</h1>'
+      + '<p style="margin:8px 0 0;font-size:12.5px;color:var(--text-muted);line-height:1.5;">AI мақсатыңды, стратегияңды және bottleneck-ті талдап, '+TASK_DEFS.length+' нақты әрекет ұсынды. Орындалды: '+done+' / '+TASK_DEFS.length+'.</p></div>'
+      + '<div style="display:flex;flex-direction:column;gap:10px;">' + cards + '</div>'
+      + '<div><div class="row-between" style="margin-bottom:10px;"><span class="kicker-muted">ДАЙЫН ШАБЛОНДАР</span>'
+        + '<button data-act="nav" data-val="templates" style="background:none;border:none;font-size:11px;font-weight:700;color:var(--accent);padding:0;">Барлығын көру →</button></div>'
+        + '<div style="display:flex;flex-direction:column;gap:8px;">'
+          + tmplChip('WhatsApp · «қымбат» қарсылығына жауап')
+          + tmplChip('Reels · сататын сценарий')
+          + tmplChip('Бизнес · оффер шаблоны')
+        + '</div></div>'
+      + navBarPlaceholder('tasks');
+  }
+  function stepRow(a,b){
+    return '<div style="display:flex;gap:10px;"><span style="color:var(--text-on-3-muted);min-width:104px;flex:0 0 104px;">'+a+'</span><span>'+b+'</span></div>';
+  }
+  function tmplChip(t){
+    return '<div class="card" style="padding:13px 14px;font-size:13px;font-weight:600;">'+t+'</div>';
+  }
+
+  // ---------- page: TEMPLATES ----------
+  var TEMPLATE_DATA = {
+    wa: ['Бірінші хабарлама', 'Follow-up хабарлама', 'Баға айту', '«Қымбат» қарсылығы', '«Ойланып көрем» қарсылығы'],
+    content: ['Reels сценарийі', 'Stories тізбегі', 'Прогрев контенті', 'Сататын пост'],
+    biz: ['Оффер шаблоны', 'ЦА картасы', 'Позиционирование', '90 күндік стратегия үлгісі'],
+  };
+  function pageTemplates(){
+    var cat = state.templates.cat;
+    return topline({to:'tasks', label:'← Тапсырма'})
+      + '<div><h1 style="font-size:22px;font-weight:600;">Дайын шаблондар</h1><p style="margin:8px 0 0;font-size:13px;color:var(--text-muted);">Бір батырмамен көшір — тілін өзің реттеп жаз.</p></div>'
+      + '<div class="seg">' + Object.keys(TEMPLATE_DATA).map(function(k){
+          var lbl = {wa:'WhatsApp',content:'Контент',biz:'Бизнес'}[k];
+          return '<button type="button" class="'+(k===cat?'on':'')+'" data-act="setCat" data-val="'+k+'">'+lbl+'</button>';
+        }).join('') + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:9px;">' + TEMPLATE_DATA[cat].map(function(t){
+          return '<div class="card row-between" style="padding:14px;"><span style="font-size:13.5px;font-weight:600;">'+t+'</span><span style="font-size:10px;font-weight:700;color:var(--accent);">КӨШІРУ</span></div>';
+        }).join('') + '</div>'
+      + navBarPlaceholder('tasks');
+  }
+
+  // ---------- page: CHAT ----------
+  function pageChat(){
+    var c = state.chat;
+    var log = c.log.map(function(m){
+      return '<div class="'+(m.who==='me'?'bubble-me':'bubble-ai')+'">'+esc(m.text)+'</div>';
+    }).join('');
+    var suggestions = ['Нишамды қалай тарылтамын?','Маған контент керек','Клиент жауап бермей қойды'];
+    return topline()
+      + '<h1 style="font-size:20px;font-weight:600;">AI Mentor</h1>'
+      + '<div class="chat-log">' + log + (c.sentToRabiya ? '<div style="align-self:center;font-size:11.5px;color:var(--sage);font-weight:700;background:var(--sage-soft);padding:7px 13px;border-radius:20px;">Рабияға жіберілді — жауап админ-панельде күтіледі</div>' : '') + '</div>'
+      + '<div style="display:flex;gap:8px;flex-wrap:wrap;">'
+        + suggestions.map(function(s){ return '<button type="button" class="pill" data-act="chatAsk" data-val="'+esc(s)+'">'+s+'</button>'; }).join('')
+        + '<button type="button" class="pill" style="border-color:var(--accent);color:var(--accent);" data-act="chatToRabiya">Рабияға жіберу</button>'
+      + '</div>'
+      + '<div style="display:flex;gap:8px;align-items:center;">'
+        + '<label for="chat-input" style="position:absolute;width:1px;height:1px;overflow:hidden;">Хабарлама</label>'
+        + '<input id="chat-input" type="text" placeholder="Сұрағыңды жаз..." value="'+esc(c.draft)+'" style="flex:1;min-width:0;border:1px solid var(--border);border-radius:22px;padding:13px 16px;font-size:13.5px;background:var(--surface);color:var(--text);">'
+        + '<button type="button" data-act="chatSend" aria-label="Жіберу" style="flex:0 0 44px;width:44px;height:44px;border-radius:50%;background:var(--accent);border:none;display:flex;align-items:center;justify-content:center;color:var(--accent-contrast);">'+icon('send',18)+'</button>'
+      + '</div>'
+      + navBarPlaceholder('chat');
+  }
+
+  // ---------- page: COMMUNITY ----------
+  function pageCommunity(){
+    var rooms = [
+      ['room1','Жалпы чат','128 қатысушы · белсенді'],
+      ['room2','Жеңістер','Студенттердің табысы туралы хабарлар'],
+      ['room3','Апталық нәтижелер','Топтық прогресс, жаңа рекордтар'],
+      ['room4','Q&A','Кез келген сұрақ — топпен бірге'],
+      ['room5','Маңызды хабарламалар','Рабиядан жаңалықтар'],
+    ];
+    return topline({to:'home', label:'Басты бет'})
+      + '<div><h1 style="font-size:22px;font-weight:600;">Community</h1><p style="margin:8px 0 0;font-size:13px;color:var(--text-muted);">Тек сабақ емес — ортада бірге әрекет ету.</p></div>'
+      + '<div style="display:flex;flex-direction:column;gap:10px;">' + rooms.map(function(r){
+          return '<div class="card" style="display:flex;align-items:center;gap:13px;padding:14px;">'
+            + '<div style="width:38px;height:38px;border-radius:10px;background:var(--accent-soft);color:var(--accent);flex:0 0 38px;display:flex;align-items:center;justify-content:center;">'+icon(r[0],19)+'</div>'
+            + '<div><div style="font-size:13.5px;font-weight:700;">'+r[1]+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">'+r[2]+'</div></div>'
+          + '</div>';
+        }).join('') + '</div>'
+      + '<div class="card-dark"><p style="margin:0;font-size:13px;line-height:1.5;">Мақсат — студент тек сабақ алып қана қоймай, ортада әрекет ететін жүйе құру.</p></div>'
+      + navBarPlaceholder('home');
+  }
+
+  // ---------- page: ANALYTICS ----------
+  function pageAnalytics(){
+    function funnel(title, steps){
+      return '<div><div class="kicker-muted" style="margin-bottom:8px;display:block;">'+title+'</div><div class="funnel">'
+        + steps.map(function(s,i){ return '<div class="step" style="font-size:13px;font-weight:700;">'+s+'</div>' + (i<steps.length-1?'<span class="arrow">→</span>':''); }).join('')
+        + '</div></div>';
+    }
+    var qs = ['не орындалды?','не орындалмады?','қай жерде проблема бар?','келесі аптадағы фокус қандай?'];
+    return topline({to:'home', label:'Басты бет'})
+      + '<div><h1 style="font-size:21px;font-weight:600;">Нәтиже және аналитика</h1><p style="margin:8px 0 0;font-size:12.5px;color:var(--text-muted);">Студент күн сайын енгізеді:</p></div>'
+      + funnel('САТУ ВОРОНКАСЫ', ['Лид','Консульт.','Сату','Түсім'])
+      + funnel('КОНТЕНТ ВОРОНКАСЫ', ['Контент','Қаралым','Жауап','Клиент'])
+      + '<div class="card-dark"><div class="kicker-on3" style="margin-bottom:8px;">АПТА СОҢЫНДА AI ТАЛДАЙДЫ</div>'
+        + qs.map(function(q,i){ return '<div style="display:flex;gap:10px;padding:8px 0;border-bottom:'+(i<qs.length-1?'1px solid var(--border-on-3)':'none')+';font-size:12.5px;"><span style="color:var(--text-on-3-muted);">0'+(i+1)+'</span><span>'+q+'</span></div>'; }).join('')
+      + '</div>'
+      + navBarPlaceholder('strategy');
+  }
+
+  // ---------- page: ADMIN ----------
+  var STUDENTS = [
+    { id:1, name:'Аружан Т.', niche:'Сұлулық қызметтері', income:'650 000 / 1 000 000 ₸', pct:65, status:'active', goal:'1 000 000 ₸ / ай', stage:'2-ай · SALES', bottleneck:'Follow-up жасамайды' },
+    { id:2, name:'Динара С.', niche:'Онлайн курс', income:'180 000 / 1 500 000 ₸', pct:12, status:'help', goal:'1 500 000 ₸ / 3 ай', stage:'1-ай · FUNDAMENT', bottleneck:'Лид саны аз' },
+    { id:3, name:'Мадина Қ.', niche:'Handmade өнім', income:'920 000 / 1 000 000 ₸', pct:92, status:'result', goal:'1 000 000 ₸ / ай', stage:'3-ай · SCALE', bottleneck:'Жоқ' },
+    { id:4, name:'Гүлнара Р.', niche:'Коучинг', income:'0 / 800 000 ₸', pct:4, status:'stuck', goal:'800 000 ₸ / ай', stage:'1-ай · FUNDAMENT', bottleneck:'Тапсырма орындамайды' },
+  ];
+  var STATUS = {
+    active:{ label:'Белсенді', c:'var(--sage)', bg:'var(--sage-soft)' },
+    help:{ label:'Көмек қажет', c:'var(--accent)', bg:'var(--accent-soft)' },
+    result:{ label:'Нәтиже бар', c:'var(--sage)', bg:'var(--sage-soft)' },
+    stuck:{ label:'Тоқтап тұр', c:'var(--danger)', bg:'var(--danger-soft)' },
+  };
+  function pageAdmin(){
+    var ad = state.admin;
+    var activeCount = STUDENTS.filter(function(s){ return s.status==='active'||s.status==='result'; }).length;
+    var helpCount = STUDENTS.filter(function(s){ return s.status==='help'||s.status==='stuck'; }).length;
+    var filters = [['all','Барлығы'],['active','Белсенді'],['help','Көмек қажет'],['result','Нәтиже бар']];
+    var rows = STUDENTS.filter(function(s){ return ad.filter==='all' || s.status===ad.filter; }).map(function(s){
+      var st = STATUS[s.status];
+      var exp = ad.expanded === s.id;
+      var body = '<div class="row-between"><div><div style="font-size:14.5px;font-weight:700;">'+s.name+'</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">'+s.niche+'</div></div>'
+        + '<span class="tag" style="background:'+st.bg+';color:'+st.c+';">'+st.label+'</span></div>'
+        + '<div style="margin-top:10px;">'
+          + '<div class="row-between" style="font-size:11px;color:var(--text-muted);margin-bottom:4px;"><span>'+s.income+'</span><span>'+s.pct+'%</span></div>'
+          + '<div class="barbg"><div class="fg" style="width:'+s.pct+'%;background:'+st.c+';"></div></div>'
+        + '</div>'
+        + (exp ? '<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:5px;font-size:11.5px;">'
+            + adRow('Мақсат', s.goal) + adRow('Стратегия', s.stage) + adRow('Bottleneck', s.bottleneck) + '</div>' : '');
+      return '<button type="button" class="card" style="text-align:left;width:100%;" data-act="toggleStudent" data-val="'+s.id+'">' + body + '</button>';
+    }).join('');
+
+    return topline({to:'home', label:'Студент режимі'})
+      + '<div class="card-dark" style="display:flex;gap:14px;">'
+        + statTile(String(STUDENTS.length),'студент','var(--text-on-3)')
+        + statTile(String(activeCount),'белсенді','var(--text-on-3)')
+        + statTile(String(helpCount),'көмек қажет','var(--accent)')
+      + '</div>'
+      + '<div style="display:flex;gap:7px;overflow-x:auto;">' + filters.map(function(f){
+          return '<button type="button" class="pill'+(ad.filter===f[0]?' on':'')+'" data-act="setFilter" data-val="'+f[0]+'">'+f[1]+'</button>';
+        }).join('') + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:10px;">' + rows + '</div>';
+  }
+  function statTile(n,l,c){
+    return '<div><div style="font-size:19px;font-weight:700;color:'+c+';" class="field-text">'+n+'</div><div class="kicker-on3">'+l+'</div></div>';
+  }
+  function adRow(a,b){
+    return '<div class="row-between"><span style="color:var(--muted);">'+a+'</span><span style="font-weight:600;">'+b+'</span></div>';
+  }
+
+  function navBarPlaceholder(){ return ''; } // nav rendered separately in #navbar
+
+  var PAGES = {
+    home: { render: pageHome, nav: 'home' },
+    tests: { render: pageTests, nav: 'tests' },
+    strategy: { render: pageStrategy, nav: 'strategy' },
+    tasks: { render: pageTasks, nav: 'tasks' },
+    chat: { render: pageChat, nav: 'chat' },
+    templates: { render: pageTemplates, nav: 'tasks' },
+    analytics: { render: pageAnalytics, nav: 'strategy' },
+    community: { render: pageCommunity, nav: 'home' },
+    admin: { render: pageAdmin, nav: null },
+  };
+
+  function render(){
+    var p = PAGES[state.page] || PAGES.home;
+    document.getElementById('app').innerHTML = p.render();
+    document.getElementById('navbar').innerHTML = p.nav ? navBar(p.nav) : '';
+    var input = document.getElementById('chat-input');
+    if (input) {
+      input.addEventListener('input', function(e){ state.chat.draft = e.target.value; });
+      input.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); actions.chatSend(); } });
+    }
+  }
+
+  var actions = {
+    nav: function(val){ state.page = val; document.getElementById('app').scrollTop = 0; render(); },
+    toggleHome: function(val){ state.home.checks[val] = !state.home.checks[val]; render(); },
+    quizStart: function(){ state.tests.step = 1; render(); },
+    quizPick: function(val, el){
+      var field = el.getAttribute('data-field');
+      var label = el.getAttribute('data-label');
+      state.tests.answers[field] = label;
+      state.tests.step += 1;
+      render();
+    },
+    setPlan: function(val){ state.strategy.plan = val; render(); },
+    toggleTask: function(val){ state.tasks.checks[val] = !state.tasks.checks[val]; render(); },
+    expandTask: function(val){ state.tasks.expanded = state.tasks.expanded === val ? null : val; render(); },
+    setCat: function(val){ state.templates.cat = val; render(); },
+    setFilter: function(val){ state.admin.filter = val; render(); },
+    toggleStudent: function(val){ var id = Number(val); state.admin.expanded = state.admin.expanded === id ? null : id; render(); },
+    chatSend: function(){
+      var text = (state.chat.draft || '').trim();
+      if (!text) return;
+      state.chat.log.push({ who:'me', text: text });
+      state.chat.log.push({ who:'ai', text:'Мен мұны сенің мақсатың мен қазіргі стратегияңды ескеріп жауап беремін: алдымен бүгінгі фокус тапсырмасын жаб, содан кейін осы сұраққа қайтамын.' });
+      state.chat.draft = '';
+      render();
+      var input = document.getElementById('chat-input');
+      if (input) input.focus();
+    },
+    chatAsk: function(val){
+      state.chat.log.push({ who:'me', text: val });
+      state.chat.log.push({ who:'ai', text:'Жақсы сұрақ. Бизнес-паспортыңа сүйеніп нақты қадам ұсынамын: алдымен ұсынысыңды бір сөйлеммен тұжырымда, содан кейін соны бүгінгі 3 хабарламада қолдан.' });
+      render();
+    },
+    chatToRabiya: function(){ state.chat.sentToRabiya = true; render(); },
+  };
+
+  document.addEventListener('click', function(e){
+    var el = e.target.closest('[data-act]');
+    if (!el) return;
+    var act = el.getAttribute('data-act');
+    var val = el.getAttribute('data-val');
+    if (actions[act]) actions[act](val, el);
+  });
+
+  render();
+})();
+</script>
